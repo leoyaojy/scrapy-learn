@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Versioning and API Stability &#8212; Scrapy 0.24.1 文档</title>
+    
+    <link rel="stylesheet" href="static/scrapydoc.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.24.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <script type="text/javascript" src="static/translations.js"></script>
+    <link rel="top" title="Scrapy 0.24.1 文档" href="index.html" />
+    <link rel="next" title="试验阶段特性" href="experimental/index.html" />
+    <link rel="prev" title="Contributing to Scrapy" href="contributing.html" />
+   
+  <link rel="stylesheet" href="static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+    
+  <div class="section" id="versioning-and-api-stability">
+<span id="versioning"></span><h1>Versioning and API Stability<a class="headerlink" href="#versioning-and-api-stability" title="永久链接至标题">¶</a></h1>
+<div class="section" id="id1">
+<h2>Versioning<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p>Scrapy uses the <a class="reference external" href="http://en.wikipedia.org/wiki/Software_versioning#Odd-numbered_versions_for_development_releases">odd-numbered versions for development releases</a>.</p>
+<p>There are 3 numbers in a Scrapy version: <em>A.B.C</em></p>
+<ul class="simple">
+<li><em>A</em> is the major version. This will rarely change and will signify very
+large changes. So far, only zero is available for <em>A</em> as Scrapy hasn&#8217;t yet
+reached 1.0.</li>
+<li><em>B</em> is the release number. This will include many changes including features
+and things that possibly break backwards compatibility. Even Bs will be
+stable branches, and odd Bs will be development.</li>
+<li><em>C</em> is the bugfix release number.</li>
+</ul>
+<p>For example:</p>
+<ul class="simple">
+<li><em>0.14.1</em> is the first bugfix release of the <em>0.14</em> series (safe to use in
+production)</li>
+</ul>
+</div>
+<div class="section" id="api-stability">
+<h2>API Stability<a class="headerlink" href="#api-stability" title="永久链接至标题">¶</a></h2>
+<p>API stability is one of Scrapy major goals for the <em>1.0</em> release, which doesn&#8217;t
+have a due date scheduled yet.</p>
+<p>Methods or functions that start with a single dash (<code class="docutils literal"><span class="pre">_</span></code>) are private and
+should never be relied as stable. Besides those, the plan is to stabilize and
+document the entire API, as we approach the 1.0 release.</p>
+<p>Also, keep in mind that stable doesn&#8217;t mean complete: stable APIs could grow
+new methods or functionality but the existing methods should keep working the
+same way.</p>
+</div>
+</div>
+
+
+    
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">內容目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Versioning and API Stability</a><ul>
+<li><a class="reference internal" href="#id1">Versioning</a></li>
+<li><a class="reference internal" href="#api-stability">API Stability</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="contributing.html" title="上一章">Contributing to Scrapy</a></li>
+      <li>Next: <a href="experimental/index.html" title="下一章">试验阶段特性</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="sources/versioning.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>快速搜索</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="转向" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    
+    <div class="footer">
+      &copy;2008-2014, written by Scrapy developers, translated by Summer&Friends.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="sources/versioning.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+    
+
+  </body>
+</html>

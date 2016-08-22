@@ -1,0 +1,228 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Scrapy文档快速开始向导 &#8212; Scrapy 0.24.1 文档</title>
+    
+    <link rel="stylesheet" href="static/scrapydoc.css" type="text/css" />
+    <link rel="stylesheet" href="static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.24.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="static/jquery.js"></script>
+    <script type="text/javascript" src="static/underscore.js"></script>
+    <script type="text/javascript" src="static/doctools.js"></script>
+    <script type="text/javascript" src="static/translations.js"></script>
+    <link rel="top" title="Scrapy 0.24.1 文档" href="index.html" />
+   
+  <link rel="stylesheet" href="static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+    
+  <div class="section" id="scrapy">
+<h1>Scrapy文档快速开始向导<a class="headerlink" href="#scrapy" title="永久链接至标题">¶</a></h1>
+<div class="section" id="id1">
+<h2>文档地址<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p>文档目前托管在readthedocs。请查看</p>
+<p><a class="reference external" href="http://scrapy-chs.readthedocs.org/zh_CN/latest/">http://scrapy-chs.readthedocs.org/zh_CN/latest/</a></p>
+</div>
+<div class="section" id="id2">
+<h2>Scrapy中文文档翻译计划<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>本文档由marchtea初始进行翻译。网上也有相应的翻译，
+但是大多仅仅翻译了其中的入门教程，并没有完整翻译。</p>
+<p>于是这个坑就打开了。</p>
+<p>&#64;update 2014/9/21</p>
+<p>&#64;update 2014/6/23
+经过一段时间的努力，以及给力的小伙伴们，目前scrapy的文档已经翻译的差不多了。目前还未翻译的章节有：</p>
+<blockquote>
+<div><ul class="simple">
+<li>topics/selectors.rst</li>
+<li>topics/spiders.rst</li>
+<li>topics/api.rst</li>
+<li>topics/practices.rst</li>
+<li>topics/loaders.rst</li>
+<li>topics/request-response.rst</li>
+<li>versioning.rst</li>
+<li>contributing.rst(可翻可不翻)</li>
+</ul>
+</div></blockquote>
+<p>剩余的章节已经翻译完毕。希望各位在查看文档的同时，对于翻译不准确的部分给予反馈(open issue)。感谢各位的支持。</p>
+<div class="section" id="id3">
+<h3>关于版本<a class="headerlink" href="#id3" title="永久链接至标题">¶</a></h3>
+<p>scrapy目前最新的发行版是 <em>0.24.4</em> 。这也是能在 <cite>pip</cite> 上下载到的 <em>最新版本</em> 。另外，其github上的repo也一直在更新。由于第一次进行翻译文档的工作，对版本也不大熟悉，导致有段时间 <cite>rtd</cite> 上的文档版本是最新的master分支上的文档，和pip上的有所不同。对于给各位造成的困扰表示抱歉。</p>
+<p>现在的repo参考了scrapy的repo，由 <cite>master分支</cite> ,  <cite>0.22分支</cite> , <cite>0.24分支</cite> 组成。</p>
+<blockquote>
+<div><ul class="simple">
+<li>master分支：紧跟着官方的master分支，文档会尽可能的与master分支相同,目前版本(0.25.1)</li>
+<li>0.22分支： 为官方的0.22分支文档，尽可能的与0.22分支相同。各位使用最新发行版的请参考本文档。</li>
+<li>0.24分支: 为官方的0.24分支文档，尽可以与0.24分支相同。请使用0.24发行版的朋友们参考本文档。</li>
+</ul>
+</div></blockquote>
+<p>在readthedocs上，默认的文档版本为 <em>0.24</em> ，以方便大家参考。而使用了官方repo最新的master分支的朋友，可以在readthedocs上修改版本，切换到master版本。</p>
+</div>
+<div class="section" id="id4">
+<h3>加入我们吧<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h3>
+<p>Scrapy的文档写得很详细，与之带来的就是文档量很大。
+仅仅靠我需要很多的时间。希望您能加入这个计划，让翻译更快速。</p>
+<p>除此之外，您也可以通过阅读相应的文章，提出翻译错误或者不满意的地方。</p>
+<ul class="simple">
+<li>欢迎open issue</li>
+<li>欢迎加入翻译组</li>
+</ul>
+</div>
+<div class="section" id="id5">
+<h3>如何翻译<a class="headerlink" href="#id5" title="永久链接至标题">¶</a></h3>
+<p>在开始翻译前，请先open issue，说明自己要翻译的章节，大致完成的时间。
+之后fork我的repo。</p>
+<p>翻译完成前请先在自己的环境中运行</p>
+<div class="highlight-bash"><div class="highlight"><pre>make html
+</pre></div>
+</div>
+<p>大致浏览一下结果。然后提交pull request。</p>
+</div>
+<div class="section" id="we-need-u">
+<h3>We need U<a class="headerlink" href="#we-need-u" title="永久链接至标题">¶</a></h3>
+</div>
+</div>
+<div class="section" id="id6">
+<h2>本文档提供了编译Scrapy文档的快速入门<a class="headerlink" href="#id6" title="永久链接至标题">¶</a></h2>
+</div>
+<div class="section" id="id7">
+<h2>环境配置<a class="headerlink" href="#id7" title="永久链接至标题">¶</a></h2>
+<p>以下Python库在编译文档时将会被使用:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Sphinx</li>
+<li>docutils</li>
+<li>jinja</li>
+</ul>
+</div></blockquote>
+<p>如果您已经安装好setuptools,执行下列命令将会安装全部所需的库
+(Sphinx同时依赖了docutils和jinja):</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">easy_install</span> <span class="n">Sphinx</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id8">
+<h2>编译文档<a class="headerlink" href="#id8" title="永久链接至标题">¶</a></h2>
+<p>在当前路径下运行下面的命令将编译文档(输出为HTML):</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">html</span>
+</pre></div>
+</div>
+<p>(HTML格式的)文档将被生成在``build/html``路径下.</p>
+</div>
+<div class="section" id="id9">
+<h2>查看文档<a class="headerlink" href="#id9" title="永久链接至标题">¶</a></h2>
+<p>您可以执行下列命令来查看文档:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">htmlview</span>
+</pre></div>
+</div>
+<p>该命令将会启动您默认的浏览器，并且打开您之前生成的HTML文档的首页</p>
+</div>
+<div class="section" id="id10">
+<h2>重新开始<a class="headerlink" href="#id10" title="永久链接至标题">¶</a></h2>
+<p>执行下列命令来清除生成的文档:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">make</span> <span class="n">clean</span>
+</pre></div>
+</div>
+<p>注意，该命令不会对文档的源文件有任何影响</p>
+</div>
+</div>
+
+
+    
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">內容目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Scrapy文档快速开始向导</a><ul>
+<li><a class="reference internal" href="#id1">文档地址</a></li>
+<li><a class="reference internal" href="#id2">Scrapy中文文档翻译计划</a><ul>
+<li><a class="reference internal" href="#id3">关于版本</a></li>
+<li><a class="reference internal" href="#id4">加入我们吧</a></li>
+<li><a class="reference internal" href="#id5">如何翻译</a></li>
+<li><a class="reference internal" href="#we-need-u">We need U</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id6">本文档提供了编译Scrapy文档的快速入门</a></li>
+<li><a class="reference internal" href="#id7">环境配置</a></li>
+<li><a class="reference internal" href="#id8">编译文档</a></li>
+<li><a class="reference internal" href="#id9">查看文档</a></li>
+<li><a class="reference internal" href="#id10">重新开始</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="sources/README.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>快速搜索</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="转向" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    
+    <div class="footer">
+      &copy;2008-2014, written by Scrapy developers, translated by Summer&Friends.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="sources/README.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+    
+
+  </body>
+</html>

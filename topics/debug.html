@@ -1,0 +1,242 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>调试(Debugging)Spiders &#8212; Scrapy 0.24.1 文档</title>
+    
+    <link rel="stylesheet" href="../static/scrapydoc.css" type="text/css" />
+    <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.24.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../static/jquery.js"></script>
+    <script type="text/javascript" src="../static/underscore.js"></script>
+    <script type="text/javascript" src="../static/doctools.js"></script>
+    <script type="text/javascript" src="../static/translations.js"></script>
+    <link rel="top" title="Scrapy 0.24.1 文档" href="../index.html" />
+    <link rel="next" title="Spiders Contracts" href="contracts.html" />
+    <link rel="prev" title="常见问题(FAQ)" href="../faq.html" />
+   
+  <link rel="stylesheet" href="../static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+    
+  <div class="section" id="debugging-spiders">
+<span id="topics-debug"></span><h1>调试(Debugging)Spiders<a class="headerlink" href="#debugging-spiders" title="永久链接至标题">¶</a></h1>
+<p>本篇介绍了调试spider的常用技术。
+考虑下面的spider:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">scrapy</span>
+<span class="kn">from</span> <span class="nn">myproject.items</span> <span class="k">import</span> <span class="n">MyItem</span>
+
+<span class="k">class</span> <span class="nc">MySpider</span><span class="p">(</span><span class="n">scrapy</span><span class="o">.</span><span class="n">Spider</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;myspider&#39;</span>
+    <span class="n">start_urls</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s1">&#39;http://example.com/page1&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;http://example.com/page2&#39;</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+        <span class="c1"># collect `item_urls`</span>
+        <span class="k">for</span> <span class="n">item_url</span> <span class="ow">in</span> <span class="n">item_urls</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">scrapy</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="n">item_url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_item</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">parse_item</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+        <span class="n">item</span> <span class="o">=</span> <span class="n">MyItem</span><span class="p">()</span>
+        <span class="c1"># populate `item` fields</span>
+        <span class="c1"># and extract item_details_url</span>
+        <span class="k">yield</span> <span class="n">scrapy</span><span class="o">.</span><span class="n">Request</span><span class="p">(</span><span class="n">item_details_url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_details</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;item&#39;</span><span class="p">:</span> <span class="n">item</span><span class="p">})</span>
+
+    <span class="k">def</span> <span class="nf">parse_details</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+        <span class="n">item</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">meta</span><span class="p">[</span><span class="s1">&#39;item&#39;</span><span class="p">]</span>
+        <span class="c1"># populate more `item` fields</span>
+        <span class="k">return</span> <span class="n">item</span>
+</pre></div>
+</div>
+<p>简单地说，该spider分析了两个包含item的页面(start_urls)。Item有详情页面，
+所以我们使用 <a class="reference internal" href="request-response.html#scrapy.http.Request" title="scrapy.http.Request"><code class="xref py py-class docutils literal"><span class="pre">Request</span></code></a> 的 <code class="docutils literal"><span class="pre">meta</span></code> 功能来传递已经部分获取的item。</p>
+<div class="section" id="parse">
+<h2>Parse命令<a class="headerlink" href="#parse" title="永久链接至标题">¶</a></h2>
+<p>检查spier输出的最基本方法是使用
+<a class="reference internal" href="commands.html#std:command-parse"><code class="xref std std-command docutils literal"><span class="pre">parse</span></code></a> 命令。这能让你在函数层(method level)上检查spider
+各个部分的效果。其十分灵活并且易用，不过不能在代码中调试。</p>
+<p>查看特定url爬取到的item:</p>
+<div class="highlight-default"><div class="highlight"><pre>$ scrapy parse --spider=myspider -c parse_item -d 2 &lt;item_url&gt;
+[ ... scrapy log lines crawling example.com spider ... ]
+
+&gt;&gt;&gt; STATUS DEPTH LEVEL 2 &lt;&lt;&lt;
+# Scraped Items  ------------------------------------------------------------
+[{&#39;url&#39;: &lt;item_url&gt;}]
+
+# Requests  -----------------------------------------------------------------
+[]
+</pre></div>
+</div>
+<p>使用 <code class="docutils literal"><span class="pre">--verbose</span></code> 或 <code class="docutils literal"><span class="pre">-v</span></code> 选项，查看各个层次的状态:</p>
+<div class="highlight-default"><div class="highlight"><pre>$ scrapy parse --spider=myspider -c parse_item -d 2 -v &lt;item_url&gt;
+[ ... scrapy log lines crawling example.com spider ... ]
+
+&gt;&gt;&gt; DEPTH LEVEL: 1 &lt;&lt;&lt;
+# Scraped Items  ------------------------------------------------------------
+[]
+
+# Requests  -----------------------------------------------------------------
+[&lt;GET item_details_url&gt;]
+
+
+&gt;&gt;&gt; DEPTH LEVEL: 2 &lt;&lt;&lt;
+# Scraped Items  ------------------------------------------------------------
+[{&#39;url&#39;: &lt;item_url&gt;}]
+
+# Requests  -----------------------------------------------------------------
+[]
+</pre></div>
+</div>
+<p>检查从单个start_url爬取到的item也是很简单的:</p>
+<div class="highlight-default"><div class="highlight"><pre>$ scrapy parse --spider=myspider -d 3 &#39;http://example.com/page1&#39;
+</pre></div>
+</div>
+</div>
+<div class="section" id="scrapy-shell">
+<h2>Scrapy终端(Shell)<a class="headerlink" href="#scrapy-shell" title="永久链接至标题">¶</a></h2>
+<p>尽管 <a class="reference internal" href="commands.html#std:command-parse"><code class="xref std std-command docutils literal"><span class="pre">parse</span></code></a> 命令对检查spider的效果十分有用，但除了显示收到的response及输出外，
+其对检查回调函数内部的过程并没有提供什么便利。
+如何调试 <code class="docutils literal"><span class="pre">parse_detail</span></code> 没有收到item的情况呢？</p>
+<p>幸运的是，救世主 <a class="reference internal" href="commands.html#std:command-shell"><code class="xref std std-command docutils literal"><span class="pre">shell</span></code></a> 出现了(参考
+<a class="reference internal" href="shell.html#topics-shell-inspect-response"><span class="std std-ref">在spider中启动shell来查看response</span></a>):</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">scrapy.shell</span> <span class="k">import</span> <span class="n">inspect_response</span>
+
+<span class="k">def</span> <span class="nf">parse_details</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+    <span class="n">item</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;item&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">item</span><span class="p">:</span>
+        <span class="c1"># populate more `item` fields</span>
+        <span class="k">return</span> <span class="n">item</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">inspect_response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>参考 <a class="reference internal" href="shell.html#topics-shell-inspect-response"><span class="std std-ref">在spider中启动shell来查看response</span></a> 。</p>
+</div>
+<div class="section" id="id1">
+<h2>在浏览器中打开<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<p>有时候您想查看某个response在浏览器中显示的效果，这是可以使用
+<code class="docutils literal"><span class="pre">open_in_browser</span></code> 功能。下面是使用的例子:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">scrapy.utils.response</span> <span class="k">import</span> <span class="n">open_in_browser</span>
+
+<span class="k">def</span> <span class="nf">parse_details</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+    <span class="k">if</span> <span class="s2">&quot;item name&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">body</span><span class="p">:</span>
+        <span class="n">open_in_browser</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">open_in_browser</span></code> 将会使用Scrapy获取到的response来打开浏览器，并且调整
+<a class="reference external" href="http://www.w3schools.com/tags/tag_base.asp">base tag</a> 使得图片及样式(style)能正常显示。</p>
+</div>
+<div class="section" id="logging">
+<h2>Logging<a class="headerlink" href="#logging" title="永久链接至标题">¶</a></h2>
+<p>记录(logging)是另一个获取到spider运行信息的方法。虽然不是那么方便，
+但好处是log的内容在以后的运行中也可以看到:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">scrapy</span> <span class="k">import</span> <span class="n">log</span>
+
+<span class="k">def</span> <span class="nf">parse_details</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+    <span class="n">item</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">meta</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;item&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">item</span><span class="p">:</span>
+        <span class="c1"># populate more `item` fields</span>
+        <span class="k">return</span> <span class="n">item</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;No item received for </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">response</span><span class="o">.</span><span class="n">url</span><span class="p">,</span>
+            <span class="n">level</span><span class="o">=</span><span class="n">log</span><span class="o">.</span><span class="n">WARNING</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>更多内容请参见 <a class="reference internal" href="logging.html#topics-logging"><span class="std std-ref">Logging</span></a> 部分。</p>
+</div>
+</div>
+
+
+    
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">內容目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">调试(Debugging)Spiders</a><ul>
+<li><a class="reference internal" href="#parse">Parse命令</a></li>
+<li><a class="reference internal" href="#scrapy-shell">Scrapy终端(Shell)</a></li>
+<li><a class="reference internal" href="#id1">在浏览器中打开</a></li>
+<li><a class="reference internal" href="#logging">Logging</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../faq.html" title="上一章">常见问题(FAQ)</a></li>
+      <li>Next: <a href="contracts.html" title="下一章">Spiders Contracts</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../sources/topics/debug.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>快速搜索</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="转向" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    
+    <div class="footer">
+      &copy;2008-2014, written by Scrapy developers, translated by Summer&Friends.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="../sources/topics/debug.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+    
+
+  </body>
+</html>

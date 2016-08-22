@@ -1,0 +1,194 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>异常(Exceptions) &#8212; Scrapy 0.24.1 文档</title>
+    
+    <link rel="stylesheet" href="../static/scrapydoc.css" type="text/css" />
+    <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.24.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../static/jquery.js"></script>
+    <script type="text/javascript" src="../static/underscore.js"></script>
+    <script type="text/javascript" src="../static/doctools.js"></script>
+    <script type="text/javascript" src="../static/translations.js"></script>
+    <link rel="top" title="Scrapy 0.24.1 文档" href="../index.html" />
+    <link rel="next" title="Item Exporters" href="exporters.html" />
+    <link rel="prev" title="信号(Signals)" href="signals.html" />
+   
+  <link rel="stylesheet" href="../static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+    
+  <div class="section" id="module-scrapy.exceptions">
+<span id="exceptions"></span><span id="topics-exceptions"></span><h1>异常(Exceptions)<a class="headerlink" href="#module-scrapy.exceptions" title="永久链接至标题">¶</a></h1>
+<div class="section" id="built-in-exceptions-reference">
+<span id="topics-exceptions-ref"></span><h2>内置异常参考手册(Built-in Exceptions reference)<a class="headerlink" href="#built-in-exceptions-reference" title="永久链接至标题">¶</a></h2>
+<p>下面是Scrapy提供的异常及其用法。</p>
+<div class="section" id="dropitem">
+<h3>DropItem<a class="headerlink" href="#dropitem" title="永久链接至标题">¶</a></h3>
+<dl class="exception">
+<dt id="scrapy.exceptions.DropItem">
+<em class="property">exception </em><code class="descclassname">scrapy.exceptions.</code><code class="descname">DropItem</code><a class="headerlink" href="#scrapy.exceptions.DropItem" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<p>该异常由item pipeline抛出，用于停止处理item。详细内容请参考
+<a class="reference internal" href="item-pipeline.html#topics-item-pipeline"><span class="std std-ref">Item Pipeline</span></a> 。</p>
+</div>
+<div class="section" id="closespider">
+<h3>CloseSpider<a class="headerlink" href="#closespider" title="永久链接至标题">¶</a></h3>
+<dl class="exception">
+<dt id="scrapy.exceptions.CloseSpider">
+<em class="property">exception </em><code class="descclassname">scrapy.exceptions.</code><code class="descname">CloseSpider</code><span class="sig-paren">(</span><em>reason='cancelled'</em><span class="sig-paren">)</span><a class="headerlink" href="#scrapy.exceptions.CloseSpider" title="永久链接至目标">¶</a></dt>
+<dd><p>该异常由spider的回调函数(callback)抛出，来暂停/停止spider。支持的参数:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">参数:</th><td class="field-body"><strong>reason</strong> (<em>str</em>) &#8211; 关闭的原因</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>样例:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="k">def</span> <span class="nf">parse_page</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+    <span class="k">if</span> <span class="s1">&#39;Bandwidth exceeded&#39;</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">body</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">CloseSpider</span><span class="p">(</span><span class="s1">&#39;bandwidth_exceeded&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="ignorerequest">
+<h3>IgnoreRequest<a class="headerlink" href="#ignorerequest" title="永久链接至标题">¶</a></h3>
+<dl class="exception">
+<dt id="scrapy.exceptions.IgnoreRequest">
+<em class="property">exception </em><code class="descclassname">scrapy.exceptions.</code><code class="descname">IgnoreRequest</code><a class="headerlink" href="#scrapy.exceptions.IgnoreRequest" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<p>该异常由调度器(Scheduler)或其他下载中间件抛出，声明忽略该request。</p>
+</div>
+<div class="section" id="notconfigured">
+<h3>NotConfigured<a class="headerlink" href="#notconfigured" title="永久链接至标题">¶</a></h3>
+<dl class="exception">
+<dt id="scrapy.exceptions.NotConfigured">
+<em class="property">exception </em><code class="descclassname">scrapy.exceptions.</code><code class="descname">NotConfigured</code><a class="headerlink" href="#scrapy.exceptions.NotConfigured" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<p>该异常由某些组件抛出，声明其仍然保持关闭。这些组件包括:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Extensions</li>
+<li>Item pipelines</li>
+<li>Downloader middlwares</li>
+<li>Spider middlewares</li>
+</ul>
+</div></blockquote>
+<p>该异常必须由组件的构造器(constructor)抛出。</p>
+</div>
+<div class="section" id="notsupported">
+<h3>NotSupported<a class="headerlink" href="#notsupported" title="永久链接至标题">¶</a></h3>
+<dl class="exception">
+<dt id="scrapy.exceptions.NotSupported">
+<em class="property">exception </em><code class="descclassname">scrapy.exceptions.</code><code class="descname">NotSupported</code><a class="headerlink" href="#scrapy.exceptions.NotSupported" title="永久链接至目标">¶</a></dt>
+<dd></dd></dl>
+
+<p>该异常声明一个不支持的特性。</p>
+</div>
+</div>
+</div>
+
+
+    
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">內容目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">异常(Exceptions)</a><ul>
+<li><a class="reference internal" href="#built-in-exceptions-reference">内置异常参考手册(Built-in Exceptions reference)</a><ul>
+<li><a class="reference internal" href="#dropitem">DropItem</a></li>
+<li><a class="reference internal" href="#closespider">CloseSpider</a></li>
+<li><a class="reference internal" href="#ignorerequest">IgnoreRequest</a></li>
+<li><a class="reference internal" href="#notconfigured">NotConfigured</a></li>
+<li><a class="reference internal" href="#notsupported">NotSupported</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="signals.html" title="上一章">信号(Signals)</a></li>
+      <li>Next: <a href="exporters.html" title="下一章">Item Exporters</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../sources/topics/exceptions.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>快速搜索</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="转向" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    
+    <div class="footer">
+      &copy;2008-2014, written by Scrapy developers, translated by Summer&Friends.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="../sources/topics/exceptions.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+    
+
+  </body>
+</html>

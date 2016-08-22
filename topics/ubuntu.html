@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Ubuntu 软件包 &#8212; Scrapy 0.24.1 文档</title>
+    
+    <link rel="stylesheet" href="../static/scrapydoc.css" type="text/css" />
+    <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.24.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../static/jquery.js"></script>
+    <script type="text/javascript" src="../static/underscore.js"></script>
+    <script type="text/javascript" src="../static/doctools.js"></script>
+    <script type="text/javascript" src="../static/translations.js"></script>
+    <link rel="top" title="Scrapy 0.24.1 文档" href="../index.html" />
+    <link rel="next" title="Scrapyd" href="scrapyd.html" />
+    <link rel="prev" title="下载项目图片" href="images.html" />
+   
+  <link rel="stylesheet" href="../static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+    
+  <div class="section" id="ubuntu">
+<span id="topics-ubuntu"></span><h1>Ubuntu 软件包<a class="headerlink" href="#ubuntu" title="永久链接至标题">¶</a></h1>
+<div class="versionadded">
+<p><span class="versionmodified">0.10 新版功能.</span></p>
+</div>
+<p><a class="reference external" href="http://scrapinghub.com/">Scrapinghub</a> 发布的apt-get可获取版本通常比Ubuntu里更新，并且在比 <a class="reference external" href="https://github.com/scrapy/scrapy">Github 仓库</a>
+(master &amp; stable branches) 稳定的同时还包括了最新的漏洞修复。</p>
+<p>用法:</p>
+<ol class="arabic">
+<li><p class="first">把Scrapy签名的GPG密钥添加到APT的钥匙环中:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">key</span> <span class="n">adv</span> <span class="o">--</span><span class="n">keyserver</span> <span class="n">hkp</span><span class="p">:</span><span class="o">//</span><span class="n">keyserver</span><span class="o">.</span><span class="n">ubuntu</span><span class="o">.</span><span class="n">com</span><span class="p">:</span><span class="mi">80</span> <span class="o">--</span><span class="n">recv</span> <span class="mi">627220</span><span class="n">E7</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">执行如下命令，创建 <cite>/etc/apt/sources.list.d/scrapy.list</cite> 文件:</p>
+<div class="highlight-default"><div class="highlight"><pre><span class="n">echo</span> <span class="s1">&#39;deb http://archive.scrapy.org/ubuntu scrapy main&#39;</span> <span class="o">|</span> <span class="n">sudo</span> <span class="n">tee</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">apt</span><span class="o">/</span><span class="n">sources</span><span class="o">.</span><span class="n">list</span><span class="o">.</span><span class="n">d</span><span class="o">/</span><span class="n">scrapy</span><span class="o">.</span><span class="n">list</span>
+</pre></div>
+</div>
+</li>
+<li><p class="first">更新包列表并安装 scrapy-0.25:</p>
+<pre class="literal-block">
+sudo apt-get update &amp;&amp; sudo apt-get install scrapy-0.25
+</pre>
+</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">注解</p>
+<p class="last">如果你要升级Scrapy，请重复步骤3。</p>
+</div>
+<div class="admonition warning">
+<p class="first admonition-title">警告</p>
+<p class="last">debian官方源提供的 <cite>python-scrapy</cite> 是一个非常老的版本且不再获得Scrapy团队支持。</p>
+</div>
+</div>
+
+
+    
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="images.html" title="上一章">下载项目图片</a></li>
+      <li>Next: <a href="scrapyd.html" title="下一章">Scrapyd</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../sources/topics/ubuntu.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>快速搜索</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="转向" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    
+    <div class="footer">
+      &copy;2008-2014, written by Scrapy developers, translated by Summer&Friends.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="../sources/topics/ubuntu.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+    
+
+  </body>
+</html>

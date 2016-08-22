@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>借助Firefox来爬取 &#8212; Scrapy 0.24.1 文档</title>
+    
+    <link rel="stylesheet" href="../static/scrapydoc.css" type="text/css" />
+    <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.24.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../static/jquery.js"></script>
+    <script type="text/javascript" src="../static/underscore.js"></script>
+    <script type="text/javascript" src="../static/doctools.js"></script>
+    <script type="text/javascript" src="../static/translations.js"></script>
+    <link rel="top" title="Scrapy 0.24.1 文档" href="../index.html" />
+    <link rel="next" title="使用Firebug进行爬取" href="firebug.html" />
+    <link rel="prev" title="通用爬虫(Broad Crawls)" href="broad-crawls.html" />
+   
+  <link rel="stylesheet" href="../static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+    
+  <div class="section" id="firefox">
+<span id="topics-firefox"></span><h1>借助Firefox来爬取<a class="headerlink" href="#firefox" title="永久链接至标题">¶</a></h1>
+<p>这里介绍一些使用Firefox进行爬取的点子及建议，以及一些帮助爬取的Firefox实用插件。</p>
+<div class="section" id="dom">
+<span id="topics-firefox-livedom"></span><h2>在浏览器中检查DOM的注意事项<a class="headerlink" href="#dom" title="永久链接至标题">¶</a></h2>
+<p>Firefox插件操作的是活动的浏览器DOM(live browser DOM)，这意味着当您检查网页源码的时候，
+其已经不是原始的HTML，而是经过浏览器清理并执行一些Javascript代码后的结果。
+Firefox是个典型的例子，其会在table中添加 <code class="docutils literal"><span class="pre">&lt;tbody&gt;</span></code> 元素。
+而Scrapy相反，其并不修改原始的HTML，因此如果在XPath表达式中使用
+<code class="docutils literal"><span class="pre">&lt;tbody&gt;</span></code> ，您将获取不到任何数据。</p>
+<p>所以，当XPath配合Firefox使用时您需要记住以下几点:</p>
+<ul class="simple">
+<li>当检查DOM来查找Scrapy使用的XPath时，禁用Firefox的Javascrpit。</li>
+<li>永远不要用完整的XPath路径。使用相对及基于属性(例如 <code class="docutils literal"><span class="pre">id</span></code> ， <code class="docutils literal"><span class="pre">class</span></code> ， <code class="docutils literal"><span class="pre">width</span></code> 等)的路径
+或者具有区别性的特性例如 <code class="docutils literal"><span class="pre">contains(&#64;href,</span> <span class="pre">'image')</span></code> 。</li>
+<li>永远不要在XPath表达式中加入 <code class="docutils literal"><span class="pre">&lt;tbody&gt;</span></code> 元素，除非您知道您在做什么</li>
+</ul>
+</div>
+<div class="section" id="topics-firefox-addons">
+<span id="id1"></span><h2>对爬取有帮助的实用Firefox插件<a class="headerlink" href="#topics-firefox-addons" title="永久链接至标题">¶</a></h2>
+<div class="section" id="firebug">
+<h3>Firebug<a class="headerlink" href="#firebug" title="永久链接至标题">¶</a></h3>
+<p><a class="reference external" href="http://getfirebug.com">Firebug</a> 是一个在web开发者间很著名的工具，其对抓取也十分有用。
+尤其是 <a class="reference external" href="http://www.youtube.com/watch?v=-pT_pDe54aA">检查元素(Inspect Element)</a> 特性对构建抓取数据的XPath十分方便。
+当移动鼠标在页面元素时，您能查看相应元素的HTML源码。</p>
+<p>查看 <a class="reference internal" href="firebug.html#topics-firebug"><span class="std std-ref">使用Firebug进行爬取</span></a> ，了解如何配合Scrapy使用Firebug的详细教程。</p>
+</div>
+<div class="section" id="xpather">
+<h3>XPather<a class="headerlink" href="#xpather" title="永久链接至标题">¶</a></h3>
+<p><a class="reference external" href="https://addons.mozilla.org/firefox/addon/1192">XPather</a> 能让你在页面上直接测试XPath表达式。</p>
+</div>
+<div class="section" id="xpath-checker">
+<h3>XPath Checker<a class="headerlink" href="#xpath-checker" title="永久链接至标题">¶</a></h3>
+<p><a class="reference external" href="https://addons.mozilla.org/firefox/addon/1095">XPath Checker</a> 是另一个用于测试XPath表达式的Firefox插件。</p>
+</div>
+<div class="section" id="tamper-data">
+<h3>Tamper Data<a class="headerlink" href="#tamper-data" title="永久链接至标题">¶</a></h3>
+<p><a class="reference external" href="http://addons.mozilla.org/firefox/addon/966">Tamper Data</a> 是一个允许您查看及修改Firefox发送的header的插件。Firebug能查看HTTP header，但无法修改。</p>
+</div>
+<div class="section" id="firecookie">
+<h3>Firecookie<a class="headerlink" href="#firecookie" title="永久链接至标题">¶</a></h3>
+<p><a class="reference external" href="https://addons.mozilla.org/firefox/addon/6683">Firecookie</a> 使得查看及管理cookie变得简单。您可以使用这个插件来创建新的cookie，
+删除存在的cookie，查看当前站点的cookie，管理cookie的权限及其他功能。</p>
+</div>
+</div>
+</div>
+
+
+    
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">內容目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">借助Firefox来爬取</a><ul>
+<li><a class="reference internal" href="#dom">在浏览器中检查DOM的注意事项</a></li>
+<li><a class="reference internal" href="#topics-firefox-addons">对爬取有帮助的实用Firefox插件</a><ul>
+<li><a class="reference internal" href="#firebug">Firebug</a></li>
+<li><a class="reference internal" href="#xpather">XPather</a></li>
+<li><a class="reference internal" href="#xpath-checker">XPath Checker</a></li>
+<li><a class="reference internal" href="#tamper-data">Tamper Data</a></li>
+<li><a class="reference internal" href="#firecookie">Firecookie</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="broad-crawls.html" title="上一章">通用爬虫(Broad Crawls)</a></li>
+      <li>Next: <a href="firebug.html" title="下一章">使用Firebug进行爬取</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../sources/topics/firefox.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>快速搜索</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="转向" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    
+    <div class="footer">
+      &copy;2008-2014, written by Scrapy developers, translated by Summer&Friends.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="../sources/topics/firefox.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+    
+
+  </body>
+</html>

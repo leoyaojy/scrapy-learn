@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh_CN">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>自动限速(AutoThrottle)扩展 &#8212; Scrapy 0.24.1 文档</title>
+    
+    <link rel="stylesheet" href="../static/scrapydoc.css" type="text/css" />
+    <link rel="stylesheet" href="../static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.24.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../static/jquery.js"></script>
+    <script type="text/javascript" src="../static/underscore.js"></script>
+    <script type="text/javascript" src="../static/doctools.js"></script>
+    <script type="text/javascript" src="../static/translations.js"></script>
+    <link rel="top" title="Scrapy 0.24.1 文档" href="../index.html" />
+    <link rel="next" title="Benchmarking" href="benchmarking.html" />
+    <link rel="prev" title="Scrapyd" href="scrapyd.html" />
+   
+  <link rel="stylesheet" href="../static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+    
+  <div class="section" id="autothrottle">
+<h1>自动限速(AutoThrottle)扩展<a class="headerlink" href="#autothrottle" title="永久链接至标题">¶</a></h1>
+<p>该扩展能根据Scrapy服务器及您爬取的网站的负载自动限制爬取速度。</p>
+<div class="section" id="id1">
+<h2>设计目标<a class="headerlink" href="#id1" title="永久链接至标题">¶</a></h2>
+<ol class="arabic simple">
+<li>更友好的对待网站，而不使用默认的下载延迟0。</li>
+<li>自动调整scrapy来优化下载速度，使得用户不用调节下载延迟及并发请求数来找到优化的值。
+用户只需指定允许的最大并发请求数，剩下的都交给扩展来完成。</li>
+</ol>
+</div>
+<div class="section" id="id2">
+<h2>扩展是如何实现的<a class="headerlink" href="#id2" title="永久链接至标题">¶</a></h2>
+<p>在Scrapy中，下载延迟是通过计算建立TCP连接到接收到HTTP包头(header)之间的时间来测量的。</p>
+<p>注意，由于Scrapy可能在忙着处理spider的回调函数或者无法下载，因此在合作的多任务环境下准确测量这些延迟是十分苦难的。
+不过，这些延迟仍然是对Scrapy(甚至是服务器)繁忙程度的合理测量，而这扩展就是以此为前提进行编写的。</p>
+</div>
+<div class="section" id="autothrottle-algorithm">
+<span id="id3"></span><h2>限速算法<a class="headerlink" href="#autothrottle-algorithm" title="永久链接至标题">¶</a></h2>
+<p>算法根据以下规则调整下载延迟及并发数:</p>
+<ol class="arabic simple">
+<li>spider永远以1并发请求数及 <a class="reference internal" href="#std:setting-AUTOTHROTTLE_START_DELAY"><code class="xref std std-setting docutils literal"><span class="pre">AUTOTHROTTLE_START_DELAY</span></code></a> 中指定的下载延迟启动。</li>
+<li>当接收到回复时，下载延迟会调整到该回复的延迟与之前下载延迟之间的平均值。</li>
+</ol>
+<div class="admonition note">
+<p class="first admonition-title">注解</p>
+<p class="last">AutoThrottle扩展尊重标准Scrapy设置中的并发数及延迟。这意味着其永远不会设置一个比
+<a class="reference internal" href="settings.html#std:setting-DOWNLOAD_DELAY"><code class="xref std std-setting docutils literal"><span class="pre">DOWNLOAD_DELAY</span></code></a> 更低的下载延迟或者比
+<a class="reference internal" href="settings.html#std:setting-CONCURRENT_REQUESTS_PER_DOMAIN"><code class="xref std std-setting docutils literal"><span class="pre">CONCURRENT_REQUESTS_PER_DOMAIN</span></code></a> 更高的并发数
+(或 <a class="reference internal" href="settings.html#std:setting-CONCURRENT_REQUESTS_PER_IP"><code class="xref std std-setting docutils literal"><span class="pre">CONCURRENT_REQUESTS_PER_IP</span></code></a> ，取决于您使用哪一个)。</p>
+</div>
+</div>
+<div class="section" id="id4">
+<h2>设置<a class="headerlink" href="#id4" title="永久链接至标题">¶</a></h2>
+<p>下面是控制AutoThrottle扩展的设置:</p>
+<ul class="simple">
+<li><a class="reference internal" href="#std:setting-AUTOTHROTTLE_ENABLED"><code class="xref std std-setting docutils literal"><span class="pre">AUTOTHROTTLE_ENABLED</span></code></a></li>
+<li><a class="reference internal" href="#std:setting-AUTOTHROTTLE_START_DELAY"><code class="xref std std-setting docutils literal"><span class="pre">AUTOTHROTTLE_START_DELAY</span></code></a></li>
+<li><a class="reference internal" href="#std:setting-AUTOTHROTTLE_MAX_DELAY"><code class="xref std std-setting docutils literal"><span class="pre">AUTOTHROTTLE_MAX_DELAY</span></code></a></li>
+<li><a class="reference internal" href="#std:setting-AUTOTHROTTLE_DEBUG"><code class="xref std std-setting docutils literal"><span class="pre">AUTOTHROTTLE_DEBUG</span></code></a></li>
+<li><a class="reference internal" href="settings.html#std:setting-CONCURRENT_REQUESTS_PER_DOMAIN"><code class="xref std std-setting docutils literal"><span class="pre">CONCURRENT_REQUESTS_PER_DOMAIN</span></code></a></li>
+<li><a class="reference internal" href="settings.html#std:setting-CONCURRENT_REQUESTS_PER_IP"><code class="xref std std-setting docutils literal"><span class="pre">CONCURRENT_REQUESTS_PER_IP</span></code></a></li>
+<li><a class="reference internal" href="settings.html#std:setting-DOWNLOAD_DELAY"><code class="xref std std-setting docutils literal"><span class="pre">DOWNLOAD_DELAY</span></code></a></li>
+</ul>
+<p>更多内容请参考 <a class="reference internal" href="#autothrottle-algorithm"><span class="std std-ref">限速算法</span></a> 。</p>
+<div class="section" id="autothrottle-enabled">
+<span id="std:setting-AUTOTHROTTLE_ENABLED"></span><h3>AUTOTHROTTLE_ENABLED<a class="headerlink" href="#autothrottle-enabled" title="永久链接至标题">¶</a></h3>
+<p>默认: <code class="docutils literal"><span class="pre">False</span></code></p>
+<p>启用AutoThrottle扩展。</p>
+</div>
+<div class="section" id="autothrottle-start-delay">
+<span id="std:setting-AUTOTHROTTLE_START_DELAY"></span><h3>AUTOTHROTTLE_START_DELAY<a class="headerlink" href="#autothrottle-start-delay" title="永久链接至标题">¶</a></h3>
+<p>默认: <code class="docutils literal"><span class="pre">5.0</span></code></p>
+<p>初始下载延迟(单位:秒)。</p>
+</div>
+<div class="section" id="autothrottle-max-delay">
+<span id="std:setting-AUTOTHROTTLE_MAX_DELAY"></span><h3>AUTOTHROTTLE_MAX_DELAY<a class="headerlink" href="#autothrottle-max-delay" title="永久链接至标题">¶</a></h3>
+<p>默认: <code class="docutils literal"><span class="pre">60.0</span></code></p>
+<p>在高延迟情况下最大的下载延迟(单位秒)。</p>
+</div>
+<div class="section" id="autothrottle-debug">
+<span id="std:setting-AUTOTHROTTLE_DEBUG"></span><h3>AUTOTHROTTLE_DEBUG<a class="headerlink" href="#autothrottle-debug" title="永久链接至标题">¶</a></h3>
+<p>默认: <code class="docutils literal"><span class="pre">False</span></code></p>
+<p>起用AutoThrottle调试(debug)模式，展示每个接收到的response。
+您可以通过此来查看限速参数是如何实时被调整的。</p>
+</div>
+</div>
+</div>
+
+
+    
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">內容目录</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">自动限速(AutoThrottle)扩展</a><ul>
+<li><a class="reference internal" href="#id1">设计目标</a></li>
+<li><a class="reference internal" href="#id2">扩展是如何实现的</a></li>
+<li><a class="reference internal" href="#autothrottle-algorithm">限速算法</a></li>
+<li><a class="reference internal" href="#id4">设置</a><ul>
+<li><a class="reference internal" href="#autothrottle-enabled">AUTOTHROTTLE_ENABLED</a></li>
+<li><a class="reference internal" href="#autothrottle-start-delay">AUTOTHROTTLE_START_DELAY</a></li>
+<li><a class="reference internal" href="#autothrottle-max-delay">AUTOTHROTTLE_MAX_DELAY</a></li>
+<li><a class="reference internal" href="#autothrottle-debug">AUTOTHROTTLE_DEBUG</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="scrapyd.html" title="上一章">Scrapyd</a></li>
+      <li>Next: <a href="benchmarking.html" title="下一章">Benchmarking</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>本页</h3>
+    <ul class="this-page-menu">
+      <li><a href="../sources/topics/autothrottle.txt"
+            rel="nofollow">显示源代码</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>快速搜索</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="转向" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    
+    <div class="footer">
+      &copy;2008-2014, written by Scrapy developers, translated by Summer&Friends.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.4.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.9</a>
+      
+      |
+      <a href="../sources/topics/autothrottle.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+    
+
+  </body>
+</html>
